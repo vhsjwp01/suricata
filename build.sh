@@ -45,6 +45,8 @@ RPMBUILD_DIRS="BUILD BUILDROOT RPMS SOURCES SPECS SRPMS"
 exit_code=${SUCCESS}
 err_msg=""
 
+return_code=${SUCCESS}
+
 ################################################################################
 # SUBROUTINES
 ################################################################################
@@ -107,9 +109,9 @@ if [ ${exit_code} -eq ${SUCCESS} ]; then
     this_dir=`${my_dirname} "${0}"`
     cd "${this_dir}" 
     repo_dir=`${my_pwd}`
-    spec_file=`${my_find} . -depth -type f -iname "*.spec" | ${my_sed} -e 's?^\./??g'`
+    spec_files=`${my_find} . -depth -type f -iname "*.spec" | ${my_sed} -e 's?^\./??g'`
 
-    if [ "${spec_file}" = "" ]; then
+    if [ "${spec_files}" = "" ]; then
         err_msg="Could not locate any RPM spec files in folder ${repo_dir}"
         exit_code=${ERROR}
     fi
@@ -139,7 +141,11 @@ if [ ${exit_code} -eq ${SUCCESS} ]; then
     if [ ${exit_code} -ne ${SUCCESS} ]; then
         err_msg="Failed to seed all RPM build environment directories"
     else
-        ${my_cp} "${repo_dir}/${spec_file}" "${HOME}/rpmbuild/SPECS"
+
+        for spec_file in ${spec_files} ; do
+            ${my_cp} "${repo_dir}/${spec_file}" "${HOME}/rpmbuild/SPECS"
+        done
+
     fi
 
 fi
@@ -148,12 +154,17 @@ fi
 # WHY:  Asked to
 #
 if [ ${exit_code} -eq ${SUCCESS} ]; then
-    ${my_rpmbuild} --define "_topdir ${HOME}/rpmbuild" -bb ${HOME}/rpmbuild/SPECS/${spec_file}
-    exit_code=${?}
 
-    if [ ${exit_code} -ne ${SUCCESS} ]; then
-        err_msg="RPM construction of ${spec_file} failed"
-    fi
+    for spec_file in ${spec_files} ; do
+        ${my_rpmbuild} --define "_topdir ${HOME}/rpmbuild" -bb ${HOME}/rpmbuild/SPECS/${spec_file}
+        return_code=${?}
+
+        if [ ${return_code} -ne ${SUCCESS} ]; then
+            echo "    ERROR:  RPM construction of ${spec_file} failed"
+            let exit_code=${exit_code}+${return_code}
+        fi
+
+    done
 
 fi
 

@@ -5,12 +5,12 @@
 %define rpm_author_email jason.plummer@ingramcontent.com
 %define distro_id %( lsb_release -is )
 %define distro_ver %( lsb_release -rs )
-%define distro_short_ver %( echo "%{distro_ver}" | awk -F'.' '{print $1}' )
+%define distro_major_ver %( echo "%{distro_ver}" | awk -F'.' '{print $1}' )
 %define source_url http://suricata-ids.org/download/
 
 Summary: a high performance Network IDS, IPS and Network Security Monitoring engine
 Name: suricata
-Release: 1.EL%{distro_short_ver}
+Release: 1.EL%{distro_major_ver}
 License: GNU
 Group: Security/Tools
 BuildRoot: %{_tmppath}/%{name}-root
@@ -46,7 +46,7 @@ BuildRequires: zlib, zlib-devel
 BuildRequires: jansson, jansson-devel 
 BuildRequires: libnet, libnet-devel 
 
-# These BuildRequires can be found in Base
+# These Requires can be found in Base
 Requires: libyaml      >= 0
 Requires: libnfnetlink >= 1
 # These Requires can be found in EPEL
