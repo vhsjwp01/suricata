@@ -6,6 +6,10 @@
 ################################################################################
 #
 # 20141223     Jason W. Plummer     Original: Build an RPM from a spec file
+# 20141224     Jason W. Plummer     Added support for multiple spec file 
+#                                   detection
+# 20141226     Jason W. Plummer     Added sorting to multiple spec file 
+#                                   detection for choreography
 #
 
 ################################################################################
@@ -94,7 +98,7 @@ check_command() {
 #
 if [ ${exit_code} -eq ${SUCCESS} ]; then
 
-    for command in cp dirname find mkdir pwd rpmbuild rsync sed ; do
+    for command in cp dirname find mkdir pwd rpmbuild rsync sed sort ; do
         check_command "${command}"
         let exit_code=${exit_code}+${return_code}
     done
@@ -109,7 +113,7 @@ if [ ${exit_code} -eq ${SUCCESS} ]; then
     this_dir=`${my_dirname} "${0}"`
     cd "${this_dir}" 
     repo_dir=`${my_pwd}`
-    spec_files=`${my_find} . -depth -type f -iname "*.spec" | ${my_sed} -e 's?^\./??g'`
+    spec_files=`${my_find} . -depth -type f -iname "*.spec" | ${my_sed} -e 's?^\./??g' | ${my_sort}`
 
     if [ "${spec_files}" = "" ]; then
         err_msg="Could not locate any RPM spec files in folder ${repo_dir}"
