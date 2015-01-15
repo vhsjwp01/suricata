@@ -71,7 +71,7 @@ Requires: python-simplejson      >= 0.6
 Requires: python-setuptools      >= 0.9
 Requires: python-distutils-extra >= 1
 
-Provides: libhtp
+Provides: libhtp-0.5.15.so.1
 
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}/%{version}
