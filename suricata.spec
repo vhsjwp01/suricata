@@ -71,6 +71,8 @@ Requires: python-simplejson      >= 0.6
 Requires: python-setuptools      >= 0.9
 Requires: python-distutils-extra >= 1
 
+Provides: libhtp
+
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}/%{version}
 
@@ -173,7 +175,7 @@ fi
 exit 0
 
 %files -f /tmp/MANIFEST.%{name}
-%{_libdir}/libhtp-*
+%{buildroot}/%{install_base}/usr/local/suricata/%{version}/lib/libhtp-*
 
 %changelog
 %define today %( date +%a" "%b" "%d" "%Y )
