@@ -175,7 +175,6 @@ fi
 exit 0
 
 %files -f /tmp/MANIFEST.%{name}
-%{buildroot}/%{install_base}/usr/local/suricata/%{version}/lib/libhtp-*
 
 %changelog
 %define today %( date +%a" "%b" "%d" "%Y )
