@@ -18,7 +18,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 # This does a scrape of the %{source_url} looking for something approaching a non-beta download link
 #%define latest_stable_release %( elinks -dump %{source_url} | egrep ".*[0-9].*\.\ http.*%{name}.*\.gz$" | egrep -v "beta" | sort | tail -1 | awk '{print $NF}' )
 # JB - Actually, for now we want the beta until 2.1 stable is released
-%define latest_stable_release %( elinks -dump %{source_url} | egrep ".*[0-9].*\.\ http.*%{name}.*\.gz$" | egrep "beta" | sort | tail -1 | awk '{print $NF}' )
+%define latest_stable_release http://www.openinfosecfoundation.org/download/suricata-2.1beta2.tar.gz
 
 URL: %{latest_stable_release}
 
