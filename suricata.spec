@@ -68,7 +68,7 @@ Requires: pcre                   >= 7.8
 Requires: GeoIP                  >= 1
 Requires: python-argparse        >= 1.2
 Requires: python-simplejson      >= 0.6
-Requires: python-setuptools      >= 2
+Requires: python-setuptools      >= 0.9
 Requires: python-distutils-extra >= 1
 
 %define install_base /usr/local/%{name}
