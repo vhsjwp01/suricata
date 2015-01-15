@@ -112,7 +112,7 @@ fi
             --enable-unix-socket --enable-profiling --enable-geoip \
             --with-libnss-libraries=/usr/lib64 --with-libnss-includes=/usr/include/nss3 \
             --with-libnspr-libraries=/usr/lib64 --with-libnspr-includes=/usr/include/nspr4 \
-            --disable-gccmarch-native
+            --enable-af-packet --disable-gccmarch-native
 make
 
 %install
@@ -173,6 +173,7 @@ fi
 exit 0
 
 %files -f /tmp/MANIFEST.%{name}
+%{_libdir}/libhtp-*
 
 %changelog
 %define today %( date +%a" "%b" "%d" "%Y )
