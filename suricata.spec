@@ -39,8 +39,7 @@ BuildRequires: nspr, nspr-devel
 BuildRequires: nss, nss-devel, nss-util, nss-util-devel 
 BuildRequires: file, file-devel 
 BuildRequires: zlib, zlib-devel 
-BuildRequires: python-argparse python-simplejson python-setuptools 
-BuildRequires: python-instant python-distutils-extra
+BuildRequires: python-argparse python-simplejson python-setuptools python-distutils-extra
  
 # This block handles Oracle Linux UEK .vs. EL BuildRequires
 #%if %{uek}
@@ -70,7 +69,6 @@ Requires: GeoIP                  >= 1
 Requires: python-argparse        >= 1.2
 Requires: python-simplejson      >= 0.6
 Requires: python-setuptools      >= 2
-Requires: python-instant         >= 2
 Requires: python-distutils-extra >= 1
 
 %define install_base /usr/local/%{name}
