@@ -72,7 +72,8 @@ Requires: python-setuptools      >= 0.9
 Requires: python-distutils-extra >= 1
 
 #Provides: libhtp-0.5.15.so.1
-AutoReqProv: no
+#AutoReqProv: no
+Provides: libhtp-0.5.15.so.1()(64bit)
 
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}/%{version}
