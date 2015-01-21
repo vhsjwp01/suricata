@@ -16,7 +16,9 @@ Group: Security/Tools
 BuildRoot: %{_tmppath}/%{name}-root
 
 # This does a scrape of the %{source_url} looking for something approaching a non-beta download link
-%define latest_stable_release %( elinks -dump %{source_url} | egrep ".*[0-9].*\.\ http.*%{name}.*\.gz$" | egrep -v "beta" | sort | tail -1 | awk '{print $NF}' )
+#%define latest_stable_release %( elinks -dump %{source_url} | egrep ".*[0-9].*\.\ http.*%{name}.*\.gz$" | egrep -v "beta" | sort | tail -1 | awk '{print $NF}' )
+# JB - Actually, for now we want the beta until 2.1 stable is released
+%define latest_stable_release http://www.openinfosecfoundation.org/download/suricata-2.1beta2.tar.gz
 
 URL: %{latest_stable_release}
 
@@ -26,6 +28,7 @@ URL: %{latest_stable_release}
 Version: %{latest_stable_version}
 
 # These BuildRequires can be found in Base
+BuildRequires: gcc, gcc-c++, automake, autoconf, libtool, make
 BuildRequires: wget, gzip, /usr/bin/lsb_release, elinks
 BuildRequires: pcre, pcre-devel
 BuildRequires: libyaml, libyaml-devel
@@ -33,9 +36,11 @@ BuildRequires: libpcap, libpcap-devel
 BuildRequires: libnfnetlink, libnfnetlink-devel 
 BuildRequires: libcap-ng, libcap-ng-devel 
 BuildRequires: nspr, nspr-devel 
-BuildRequires: nss, nss-devel 
+BuildRequires: nss, nss-devel, nss-util, nss-util-devel 
 BuildRequires: file, file-devel 
 BuildRequires: zlib, zlib-devel 
+BuildRequires: python-argparse python-simplejson python-setuptools python-distutils-extra
+ 
 # This block handles Oracle Linux UEK .vs. EL BuildRequires
 #%if %{uek}
 #BuildRequires: kernel-uek-devel, kernel-uek-headers
@@ -45,13 +50,30 @@ BuildRequires: zlib, zlib-devel
 # These BuildRequires can be found in EPEL
 BuildRequires: jansson, jansson-devel 
 BuildRequires: libnet, libnet-devel 
+BuildRequires: GeoIP, GeoIP-devel 
 
 # These Requires can be found in Base
-Requires: libyaml      >= 0
-Requires: libnfnetlink >= 1
+Requires: libyaml                >= 0
+Requires: zlib                   >= 0
+Requires: libnfnetlink           >= 1
+Requires: nss                    >= 3.16
+Requires: nss-util               >= 3.16
+Requires: nspr                   >= 4.10
 # These Requires can be found in EPEL
-Requires: jansson      >= 2
-Requires: libnet       >= 1
+Requires: jansson                >= 2
+Requires: libnet                 >= 1
+Requires: libcap                 >= 2.16
+Requires: libcap-ng              >= 0.6
+Requires: pcre                   >= 7.8
+Requires: GeoIP                  >= 1
+Requires: python-argparse        >= 1.2
+Requires: python-simplejson      >= 0.6
+Requires: python-setuptools      >= 0.9
+Requires: python-distutils-extra >= 1
+
+#Provides: libhtp-0.5.15.so.1
+#AutoReqProv: no
+Provides: libhtp-0.5.15.so.1()(64bit)
 
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}/%{version}
@@ -90,7 +112,11 @@ eval cpu_count=`egrep "^physical id" /proc/cpuinfo | sort -u | wc -l | awk '{pri
 if [ ${cpu_count} -gt 0 ]; then
     export MAKEFLAGS="-j${cpu_count}"
 fi
-./configure --prefix=%{install_dir}
+./configure --prefix=%{install_dir} \
+            --enable-unix-socket --enable-profiling --enable-geoip \
+            --with-libnss-libraries=/usr/lib64 --with-libnss-includes=/usr/include/nss3 \
+            --with-libnspr-libraries=/usr/lib64 --with-libnspr-includes=/usr/include/nspr4 \
+            --enable-af-packet --disable-gccmarch-native
 make
 
 %install
