@@ -89,7 +89,7 @@ checksumming support.
 
 %build
 cd ~/rpmbuild/BUILD
-wget %{SOURCE0}
+wget %{url}
 zcat %{name}-%{version}.tar.gz | tar xvf -
 cd ~/rpmbuild/BUILD/%{name}-%{version}
 eval cpu_count=`egrep "^physical id" /proc/cpuinfo | sort -u | wc -l | awk '{print $1}'`
