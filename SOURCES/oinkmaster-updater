@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ -e /etc/oinkmaster/oinkmaster_rule_urls.conf ]; then
+  while read url; do
+    if ! [[ $url =~ /^\#/ ]]; then
+      /opt/oinkmaster/bin/oinkmaster.pl -C /etc/oinkmaster/oinkmaster.conf -u $url -o /etc/suricata/rules 
+    fi
+  done </etc/oinkmaster/oinkmaster_rule_urls.conf
+  systemctl reload suricata.service
+fi
+#/opt/oinkmaster/bin/oinkmaster.pl -C /etc/oinkmaster/oinkmaster.conf -u http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz -o /etc/suricata/rules
+#/opt/oinkmaster/bin/oinkmaster.pl -C /etc/oinkmaster/oinkmaster.conf -u https://www.snort.org/pub-bin/oinkmaster.cgi/d138f96f0eb17310166ccae23fb7c671fcf78ed9/snortrules-snapshot-2970.tar.gz -o /etc/suricata/rules
+#/opt/oinkmaster/bin/oinkmaster.pl -C /etc/oinkmaster/oinkmaster.conf -u http://rules.emergingthreatspro.com/4396334607076054/suricata-2.1.0/etpro.rules.tar.gz -o /etc/suricata/rules
+#kill -USR2 $(cat /var/run/suricata-int.pid)

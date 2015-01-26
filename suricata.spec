@@ -78,34 +78,18 @@ Provides: libhtp-0.5.15.so.1()(64bit)
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}/%{version}
 
+# Define our variables here
 Source0: %{url}
-#Source1: /usr/src/redhat/SOURCES/suricata_init_script
 
 %description
-Top 3 Reasons You Should Try Suricata:
-1. Highly Scalable - Suricata is multi threaded. This means you can run 
-one instance and it will balance the load of processing across every 
-processor on a sensor Suricata is configured to use. This allows commodity 
-hardware to achieve 10 gigabit speeds on real life traffic without 
-sacrificing ruleset coverage.
-2. Protocol Identification - The most common protocols are automatically 
-recognized by Suricata as the stream starts, thus allowing rule writers to 
-write a rule to the protocol, not to the port expected. This makes Suricata 
-a Malware Command and Control Channel hunter like no other. Off port HTTP 
-CnC channels, which normally slide right by most IDS systems, are child’s 
-play for Suricata! Furthermore, thanks to dedicated keywords you can match 
-on protocol fields which range from http URI to a SSL certificate identifier.
-3. File Identification, MD5 Checksums, and File Extraction - Suricata can 
-identify thousands of file types while crossing your network! Not only can 
-you identify it, but should you decide you want to look at it further you 
-can tag it for extraction and the file will be written to disk with a meta 
-data file describing the capture situation and flow. The file’s MD5 checksum 
-is calculated on the fly, so if you have a list of md5 hashes you want to 
-keep in your network, or want to keep out, Suricata can find it.
+Suricata is a multi-threaded IDS used for monitoring network traffic. Alerts
+are generated when traffic matches patterns in rule files. This version of
+Suricata has been compiled with GeoIP support, unix socket support, and md5
+checksumming support.
 
 %build
 cd ~/rpmbuild/BUILD
-wget %{url}
+wget %{SOURCE0}
 zcat %{name}-%{version}.tar.gz | tar xvf -
 cd ~/rpmbuild/BUILD/%{name}-%{version}
 eval cpu_count=`egrep "^physical id" /proc/cpuinfo | sort -u | wc -l | awk '{print $1}'`
@@ -120,6 +104,7 @@ fi
 make
 
 %install
+printf "Source1 is: %{SOURCE1}"
 rm -rf %{buildroot}
 cd ~/rpmbuild/BUILD/%{name}-%{version}
 # Populate %{buildroot}
@@ -134,8 +119,28 @@ make DESTDIR=%{buildroot} install-full
 rsync -avHS --progress %{install_dir} %{buildroot}%{install_base}
 # Then blow away the local copy
 rm -rf %{install_base}
+
 # Insert init script
-#mkdir -p %{buildroot}/etc/rc.d/init.d && cp %{SOURCE1} %{buildroot}/etc/rc.d/init.d/suricata
+if [ %{distro_major_ver} -eq 6 ]; then
+  mkdir -p %{buildroot}/etc/init/
+  cp ~/rpmbuild/SOURCES/%{name}.conf %{buildroot}/etc/init/
+fi
+if [ %{distro_major_ver} -gt 6 ]; then
+  mkdir -p %{buildroot}/usr/lib/system/systemd/
+  cp ~/rpmbuild/SOURCES/%{name}.service %{buildroot}/usr/lib/system/systemd/
+fi
+
+# Insert oinkmaster
+mkdir -p %{buildroot}/opt/oinkmaster/bin/
+cp ~/rpmbuild/SOURCES/oinkmaster.pl %{buildroot}/opt/oinkmaster/bin/
+mkdir -p %{buildroot}/etc/oinkmaster/
+mkdir -p %{buildroot}/etc/cron.daily/
+cp ~/rpmbuild/SOURCES/oinkmaster-updater %{buildroot}/etc/cron.daily/
+
+# Copy oinkmaster files
+mkdir -p %{buildroot}/etc/oinkmaster
+cp %{SOURCE1}
+mkdir -p %{buildroot}/etc/init
 # Build packaging manifest
 rm -rf /tmp/MANIFEST.%{name}* > /dev/null 2>&1
 echo '%defattr(-,root,root)' > /tmp/MANIFEST.%{name}
