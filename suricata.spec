@@ -115,9 +115,9 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} install-conf
 make DESTDIR=%{buildroot} install-full
 # Copy locally downloaded content into DESTDIR:
-#rsync -avHS --progress %{install_dir} %{buildroot}%{install_base}
+rsync -avHS --progress %{install_dir}/* %{buildroot}
 # Then blow away the local copy
-#rm -rf %{install_dir}
+rm -rf %{install_dir}
 
 # Insert init script
 if [ %{distro_major_ver} -eq 6 ]; then
