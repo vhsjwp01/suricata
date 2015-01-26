@@ -163,8 +163,10 @@ done | sort -u >> /tmp/MANIFEST.%{name}
 #    /sbin/chkconfig --add suricata && /sbin/chkconfig suricata on
 #fi
 # Create suricata var directories
-mkdir -p "/var/{log,run}/suricata"
-mkdir -p "/var/log/suricata/{files,certs}"
+mkdir -p "/var/run/suricata"
+mkdir -p "/var/log/suricata"
+mkdir -p "/var/log/suricata/certs"
+mkdir -p "/var/log/suricata/files"
 exit 0
 
 %postun
