@@ -104,7 +104,6 @@ fi
 make
 
 %install
-printf "Source1 is: %{SOURCE1}"
 rm -rf %{buildroot}
 cd ~/rpmbuild/BUILD/%{name}-%{version}
 # Populate %{buildroot}
@@ -133,14 +132,10 @@ fi
 # Insert oinkmaster
 mkdir -p %{buildroot}/opt/oinkmaster/bin/
 cp ~/rpmbuild/SOURCES/oinkmaster.pl %{buildroot}/opt/oinkmaster/bin/
-mkdir -p %{buildroot}/etc/oinkmaster/
+mkdir -p %{buildroot}/etc/suricata/oinkmaster/
 mkdir -p %{buildroot}/etc/cron.daily/
 cp ~/rpmbuild/SOURCES/oinkmaster-updater %{buildroot}/etc/cron.daily/
 
-# Copy oinkmaster files
-mkdir -p %{buildroot}/etc/oinkmaster
-cp %{SOURCE1}
-mkdir -p %{buildroot}/etc/init
 # Build packaging manifest
 rm -rf /tmp/MANIFEST.%{name}* > /dev/null 2>&1
 echo '%defattr(-,root,root)' > /tmp/MANIFEST.%{name}
