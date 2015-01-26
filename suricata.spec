@@ -117,7 +117,8 @@ make DESTDIR=%{buildroot} install-full
 # Copy locally downloaded content into DESTDIR:
 rsync -avHS --progress %{install_dir}/* %{buildroot}
 # Then blow away the local copy
-#rm -rf %{install_dir}
+%define var_dir_structure %( find "%{install_dir}/var" -depth -type d )
+rm -rf %{install_dir}
 
 # Insert init script
 if [ %{distro_major_ver} -eq 6 ]; then
@@ -163,10 +164,14 @@ done | sort -u >> /tmp/MANIFEST.%{name}
 #    /sbin/chkconfig --add suricata && /sbin/chkconfig suricata on
 #fi
 # Create suricata var directories
-if [ ! -d "%{install_dir}/var" ]; then
-    mkdir -p "%{install_dir}/var/{log,run}/suricata"
-    mkdir -p "%{install_dir}/var/log/suricata/{files,certs}"
-fi
+for var_dir in %{var_dir_structure} ; do
+    real_dir=`echo "${var_dir}" | sed -e 's?^%{install_dir}??g'`
+    if [ ! -d "${real_dir}" ]; then
+        mkdir -p "${real_dir}"
+    fi
+done
+#mkdir -p "/var/{log,run}/suricata"
+#mkdir -p "/var/log/suricata/{files,certs}"
 exit 0
 
 %postun
