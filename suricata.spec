@@ -76,7 +76,7 @@ Requires: python-distutils-extra >= 1
 Provides: libhtp-0.5.15.so.1()(64bit)
 
 %define install_base /usr/local/%{name}
-%define install_dir %{install_base}/%{version}
+%define install_dir %{install_base}
 
 # Define our variables here
 Source0: %{url}
