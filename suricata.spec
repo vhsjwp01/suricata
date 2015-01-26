@@ -115,9 +115,9 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} install-conf
 make DESTDIR=%{buildroot} install-full
 # Copy locally downloaded content into DESTDIR:
-rsync -avHS --progress %{install_dir} %{buildroot}%{install_base}
+#rsync -avHS --progress %{install_dir} %{buildroot}%{install_base}
 # Then blow away the local copy
-rm -rf %{install_base}
+#rm -rf %{install_dir}
 
 # Insert init script
 if [ %{distro_major_ver} -eq 6 ]; then
@@ -125,8 +125,8 @@ if [ %{distro_major_ver} -eq 6 ]; then
   cp ~/rpmbuild/SOURCES/%{name}.conf %{buildroot}/etc/init/
 fi
 if [ %{distro_major_ver} -gt 6 ]; then
-  mkdir -p %{buildroot}/usr/lib/system/systemd/
-  cp ~/rpmbuild/SOURCES/%{name}.service %{buildroot}/usr/lib/system/systemd/
+  mkdir -p %{buildroot}/usr/lib/systemd/system/
+  cp ~/rpmbuild/SOURCES/%{name}.service %{buildroot}/usr/lib/systemd/system/
 fi
 
 # Insert oinkmaster
