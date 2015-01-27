@@ -4,7 +4,7 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/local/bin/suricata -c /etc/suricata/suricata.yaml --af-packet=p4p1 --pidfile /var/run/suricata.pid
+ExecStart=/usr/local/suricata/bin/suricata -c /etc/suricata/suricata.yaml --af-packet=p4p1 --pidfile /var/run/suricata.pid
 ExecReload=/bin/kill -USR2 $MAINPID
 ExecStop=/bin/kill $MAINPID
 
