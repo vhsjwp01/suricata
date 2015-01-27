@@ -53,6 +53,7 @@ BuildRequires: libnet, libnet-devel
 BuildRequires: GeoIP, GeoIP-devel 
 
 # These Requires can be found in Base
+Requires: wget                   >= 0
 Requires: libyaml                >= 0
 Requires: zlib                   >= 0
 Requires: libnfnetlink           >= 1
