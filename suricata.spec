@@ -18,7 +18,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 # This does a scrape of the %{source_url} looking for something approaching a non-beta download link
 #%define latest_stable_release %( elinks -dump %{source_url} | egrep ".*[0-9].*\.\ http.*%{name}.*\.gz$" | egrep -v "beta" | sort | tail -1 | awk '{print $NF}' )
 # JB - Actually, for now we want the beta until 2.1 stable is released
-%define latest_stable_release http://www.openinfosecfoundation.org/download/suricata-2.1beta2.tar.gz
+%define latest_stable_release http://www.openinfosecfoundation.org/download/suricata-2.1beta3.tar.gz
 
 URL: %{latest_stable_release}
 
@@ -72,9 +72,9 @@ Requires: python-simplejson      >= 0.6
 Requires: python-setuptools      >= 0.9
 Requires: python-distutils-extra >= 1
 
-#Provides: libhtp-0.5.15.so.1
+#Provides: libhtp-0.5.16.so.1
 #AutoReqProv: no
-Provides: libhtp-0.5.15.so.1()(64bit)
+Provides: libhtp-0.5.16.so.1()(64bit)
 
 %define install_base /usr/local/%{name}
 %define install_dir %{install_base}
@@ -116,7 +116,7 @@ make DESTDIR=%{buildroot} install
 make DESTDIR=%{buildroot} install-conf
 make DESTDIR=%{buildroot} install-full
 # Copy locally downloaded content into DESTDIR:
-rsync -avHS --progress %{install_dir}/* %{buildroot}
+#rsync -avHS --progress %{install_dir}/* %{buildroot}
 # Then blow away the local copy
 rm -rf %{install_dir}
 
